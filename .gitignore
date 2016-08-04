@@ -1,0 +1,5 @@
+resource/*
+same_number/resource/*
+model
+state
+graph.dot
