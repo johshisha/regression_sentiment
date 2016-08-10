@@ -26,7 +26,7 @@ y5: 0.4 diff: -0.1 loss: 0.501214547363 l_diff: 0.217191006378
 """
 
 
-def convex(x, a=3, b=9):
+def convex(x, a=3, b=2):
     return b*math.exp(-a*x**2 / 2)
     
 
@@ -39,10 +39,6 @@ if __name__ == '__main__':
     print 't:', t
     for b in range(3,10):
         for a in range(1,6):
-            x = map(lambda x: x/10.0, range(-10,11))
-            y = map(lambda y: convex(y, a=a, b=b), x)
-            #plt.plot(x, y, label='%d'%a)
-            
             y1 = t - 0.2
             n1 = convex(y1, a=a, b=b)
             l1 = ((t-y1) * n1)**2
@@ -72,17 +68,22 @@ if __name__ == '__main__':
                 print 'y4:', y4, 'diff:', (t-y4), 'loss:', l4, 'l_diff:', l3-l4
                 print 'y5:', y5, 'diff:', (t-y5), 'loss:', l5, 'l_diff:', l4-l5
                     
-
+    
     while(True):     
         print '\nplease input parms'
         print 't a b'
         raw = raw_input()
         if raw == 'exit':
             sys.exit(0)
+            
         t, a, b = raw.split(' ')
         t = float(t)
         a = int(a)
         b = int(b)   
+        
+        x = map(lambda x: x/10.0, range(-10,11))
+        y = map(lambda y: convex(y, a=a, b=b), x)
+        plt.plot(x, y, label='%d'%a)
         
         y1 = t - 0.2
         n1 = convex(y1, a=a, b=b)
@@ -111,8 +112,9 @@ if __name__ == '__main__':
         print 'y4:', y4, 'diff:', (t-y4), 'loss:', l4, 'l_diff:', l3-l4
         print 'y5:', y5, 'diff:', (t-y5), 'loss:', l5, 'l_diff:', l4-l5
             
+        plt.legend()
+        plt.show()
 
 
     
-    #plt.legend()
-    #plt.show()
+    

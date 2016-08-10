@@ -1,5 +1,11 @@
+for i in 1 2 3 4 5
+do
+python program/pca.py resource/fc7_features ${i} &
 
+done;
 
+wait;
+<<COMMENTOUT
 for i in 2 3
 do
 python program/train_regression_normal_distribution.py -g 1 --no-show -r 'resource/images' --initmodel resource/alex_regression.model resource/cv_lists $i &
@@ -40,4 +46,4 @@ wait;
 python program/calc_performance_from_log.py resource/cv_regression_normal_distribution_model/remove_1/result_model.txt
 
 python program/calc_performance_from_log.py resource/cv_regression_model/remove_1/result_model.txt
-
+COMMENTOUT

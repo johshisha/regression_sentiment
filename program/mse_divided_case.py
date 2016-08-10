@@ -1,12 +1,9 @@
 import numpy
 
 from chainer import function
-from chainer import cuda
 from chainer.utils import type_check
 import math
-from convex_function import convex
 
-cp = cuda.cupy
 
 class MeanSquaredError(function.Function):
 
@@ -23,17 +20,20 @@ class MeanSquaredError(function.Function):
     def forward_cpu(self, inputs):
         x0, x1 = inputs
         self.diff = (x0 - x1)
-        diff = self.diff.ravel() * map(lambda p: convex(p[0]), x0)
+        diff = self.diff.ravel()
+        n = map(lambda p: divided_case(p[0][0],p[1][0]),zip(x0,x1))
+        diff = numpy.array(map(lambda x: diff[x] * n[x], range(len(n))))
         return numpy.array(diff.dot(diff) / diff.size, dtype=diff.dtype),
 
     def forward_gpu(self, inputs):
         x0, x1 = inputs
         for i in range(len(x0)):
-            x0[i] = x0[i] * convex(x0[i][0], a=6, b=3)
-            x1[i] = x1[i] * convex(x1[i][0], a=6, b=3)
+            x0[i] = x0[i] * divided_case(x0[i][0], x1[i][0])
+            x1[i] = x1[i] * divided_case(x0[i][0], x1[i][0])
+        
         self.diff = (x0 - x1)
         diff = self.diff.ravel()
-        #n = map(lambda p: convex(p[0]), x0)
+        #n = map(lambda p: divided_case(p[0][0],p[1][0]),zip(x0,x1))
         #diff = numpy.array(map(lambda x: diff[x] * n[x], range(len(n))))
         return diff.dot(diff) / diff.dtype.type(diff.size),
 
@@ -51,5 +51,24 @@ def mean_squared_error(x0, x1):
 
     """
     return MeanSquaredError()(x0, x1)
+    
+from convex_function import convex
+def divided_case(y, t):
+    #print 'y:',y,', t:',t, 
+    y_c = label_c(y)
+    t_c = label_c(t)
+    #print ',diff:',(y-t)
+    
+    if y_c != t_c:
+        return 2
+    else:
+        return 1
+    
+def label_c(a):
+    if a >= 0.0:
+        return 1
+    elif a < 0.0:
+        return -1
+    
     
 
