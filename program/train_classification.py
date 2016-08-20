@@ -64,8 +64,6 @@ parser.add_argument('--resume', default='',
                     help='Resume the optimization from snapshot')
 parser.add_argument('--test', dest='test', action='store_true')
 parser.set_defaults(test=False)
-parser.add_argument('--removed', dest='removed', action='store_true')
-parser.set_defaults(removed=False)
 parser.add_argument('--no-show', dest='show', action='store_false')
 parser.set_defaults(show=True)
 args = parser.parse_args()
@@ -101,19 +99,11 @@ k = 5
 test_k = args.test_k
 
 out_path = 'resource/cv_classification_model/remove_%d'%test_k
-if args.removed:
-    print('using removed file list')
-    out_path = 'resource/cv_removed_classification_model/remove_%d'%test_k
 if not os.path.isdir(out_path):
     os.mkdir(out_path)
     
 
 mean_path = args.image_file_dir + '/remove_%d_mean.npy'%test_k
-path_t = args.image_file_dir + '/cv_list%d.txt'
-if args.removed:
-    mean_path = args.image_file_dir + '/removed_remove_%d_mean.npy'%test_k
-    path_t = args.image_file_dir + '/removed_cv_list%d.txt'
-
 
 #out_model = args.out
 #out_state = args.outstate
@@ -127,7 +117,7 @@ data_train = []
 label_train = []
 for i in range(1, k+1):
     if i != test_k:
-        path = path_t%i
+        path = args.image_file_dir + '/cv_list%d.txt'%i
         print('load train file %s'%path)
         data_list, label_list = load_image_from_list.for_classification(path, args.root)
         data_train.extend(data_list)
@@ -136,7 +126,7 @@ for i in range(1, k+1):
 mean_image = compute_mean.compute_mean\
     (data_train, path=mean_path)
     
-path = path_t%test_k
+path = args.image_file_dir + '/cv_list%d.txt'%test_k
 data_test, label_test = load_image_from_list.for_classification(path, args.root)
 
 print('train:', len(data_train), ' test:', len(data_test))
