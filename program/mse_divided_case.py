@@ -1,3 +1,4 @@
+#coding: utf-8
 import numpy
 
 from chainer import function
@@ -30,6 +31,7 @@ class MeanSquaredError(function.Function):
         for i in range(len(x0)):
             x0[i] = x0[i] * divided_case(x0[i][0], x1[i][0])
             x1[i] = x1[i] * divided_case(x0[i][0], x1[i][0])
+            #次はabs(y)<abs(t)なら差にconvex(y)?
         
         self.diff = (x0 - x1)
         diff = self.diff.ravel()
@@ -55,12 +57,17 @@ def mean_squared_error(x0, x1):
 from convex_function import convex
 def divided_case(y, t):
     #print 'y:',y,', t:',t, 
-    y_c = label_c(y)
-    t_c = label_c(t)
+    #y_c = label_c(y)
+    #t_c = label_c(t)
     #print ',diff:',(y-t)
-    
-    if y_c != t_c:
-        return 2
+    """
+    if y_c == t_c:
+        return convex(y,a=1,b=1)
+    else:
+        return 1
+    """
+    if abs(y) > abs(t):
+        return 5
     else:
         return 1
     

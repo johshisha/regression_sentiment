@@ -40,20 +40,21 @@ def compute_mean(dataset, path='resource/model/mean.npy', force = False):
 
 import sys, load_image_from_list 
 if __name__ == '__main__':
-    test_k = int(sys.argv[1])
-    root = 'resource/images'
-    k = 5
-    image_file_dir = 'resource/cv_lists'
+    for test_k in range(5):
+        test_k += 1
+        root = 'resource/images'
+        k = 5
+        image_file_dir = 'resource/cv_lists'
 
-    mean_path = image_file_dir + '/remove_%d_mean.npy'%test_k
-    print mean_path
-    data_train = []
-    label_train = []
-    for i in range(1, k+1):
-        if i != test_k:
-            path = image_file_dir + '/cv_list%d.txt'%i
-            data_list, label_list = load_image_from_list.for_regression(path, root)
-            data_train.extend(data_list)
-            label_train.extend(label_list)
-            
-    mean_image = compute_mean(data_train, path=mean_path)
+        mean_path = image_file_dir + '/removed_remove_%d_mean.npy'%test_k
+        print mean_path
+        data_train = []
+        label_train = []
+        for i in range(1, k+1):
+            if i != test_k:
+                path = image_file_dir + '/removed_cv_list%d.txt'%i
+                data_list, label_list = load_image_from_list.for_regression(path, root)
+                data_train.extend(data_list)
+                label_train.extend(label_list)
+                
+        mean_image = compute_mean(data_train, path=mean_path)

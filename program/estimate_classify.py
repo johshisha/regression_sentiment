@@ -162,12 +162,12 @@ def log_result():
         count += 1
         
         print(result)
-        print(result[0][0])
+        #print(result[0][0])
         if result[0][0] > result[0][1]:    
             res = 0
         else:
             res = 1
-        print(result, res)
+        #print(result, res)
         
         if args.print_f:
             if orig:

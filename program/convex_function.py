@@ -78,8 +78,8 @@ if __name__ == '__main__':
             
         t, a, b = raw.split(' ')
         t = float(t)
-        a = int(a)
-        b = int(b)   
+        a = float(a)
+        b = float(b)   
         
         x = map(lambda x: x/10.0, range(-10,11))
         y = map(lambda y: convex(y, a=a, b=b), x)
